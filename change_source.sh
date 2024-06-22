@@ -1,43 +1,34 @@
 #!/bin/bash
 
-echo "请选择更新源:"
-echo "1) 阿里云"
-echo "2) 清华大学"
-echo "3) 中国科学技术大学"
-read -p "输入数字选择: " choice
+# 提供选项菜单
+echo "请选择要执行的命令:"
+echo "1) 执行脚本并使用中国大陆源"
+echo "2) 执行脚本并使用海外源"
+echo "3) 执行脚本并使用教育网源"
+echo "4) 执行脚本并使用Docker一键安装脚本"
 
+# 读取用户输入
+read -p "请输入序号: " choice
+
+# 根据用户输入执行相应命令
 case $choice in
-    1)
-        new_sources="deb http://mirrors.aliyun.com/ubuntu/ noble main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ noble-updates main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ noble-backports main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ noble-security main restricted universe multiverse"
-        ;;
-    2)
-        new_sources="deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble main restricted universe multiverse
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-updates main restricted universe multiverse
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-backports main restricted universe multiverse
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-security main restricted universe multiverse"
-        ;;
-    3)
-        new_sources="deb https://mirrors.ustc.edu.cn/ubuntu/ noble main restricted universe multiverse
-deb https://mirrors.ustc.edu.cn/ubuntu/ noble-updates main restricted universe multiverse
-deb https://mirrors.ustc.edu.cn/ubuntu/ noble-backports main restricted universe multiverse
-deb https://mirrors.ustc.edu.cn/ubuntu/ noble-security main restricted universe multiverse"
-        ;;
-    *)
-        echo "无效选择"
-        exit 1
-        ;;
+1)
+echo "正在执行使用中国大陆源..."
+bash <(curl -sSL https://linuxmirrors.cn/main.sh)
+;;
+2)
+echo "正在执行脚本并使用海外源..."
+bash <(curl -sSL https://linuxmirrors.cn/main.sh) --abroad
+;;
+3)
+echo "正在执行脚本并使用教育网源..."
+bash <(curl -sSL https://linuxmirrors.cn/main.sh) --edu
+;;
+4)
+echo "正在执行Docker一键安装脚本..."
+bash <(curl -sSL https://linuxmirrors.cn/docker.sh)
+;;
+*)
+echo "无效的选择"
+;;
 esac
-
-# 备份原始sources.list文件
-sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
-
-# 替换sources.list内容
-echo "$new_sources" | sudo tee /etc/apt/sources.list
-
-# 更新APT缓存
-sudo apt update
-
-echo "更新源已切换并缓存更新完毕。"
